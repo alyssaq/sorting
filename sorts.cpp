@@ -186,6 +186,14 @@ void Sorter::quickSort(vector<int> &items) {
   quickSortHelper(items, items.begin(), items.end() - 1);
 }
 
+void Sorter::countingSort(vector<int> &item) {
+
+}
+
+void Sorter::radixSort(std::vector<int> &items){
+
+}
+
 int main() {
   int myints[] = {16,277,3,-2,24,-54,-1,0,56,87,7,-7};
   vector<int> items (myints, myints + sizeof(myints) / sizeof(int));
@@ -212,6 +220,10 @@ int main() {
   sortedItems = items;
   sorter.quickSort(sortedItems);
   assert(vector2string(sortedItems)  == sortedStr);
+
+  sortedItems = items;
+  sorter.countingSort(sortedItems);
+  //assert(vector2string(sortedItems)  == sortedStr);
 
   print(sortedItems);
 }

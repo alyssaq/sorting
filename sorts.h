@@ -31,6 +31,7 @@ class Sorter {
   push it into a sorted array and delete.
   Heapsort: Use a prioirity queue and speed it to O(n log n)
   Find and delete takes O(log n) instead of O(n) 
+  Its best application is for incremental sorting on small sets of data.
   */
   void selectionSort(std::vector<int> &items);
 
@@ -40,21 +41,40 @@ class Sorter {
   */
   void bubbleSort(std::vector<int> &items);
 
-  /* Merge sort: O(n log n)
+  /* Merge sort: O(n log n). Space: 2 arrays: O(n)
+  Twice the storage of quick sort.
   1) Divide the unsorted list into n sublists, 
      each containing 1 element (a list of 1 element is considered sorted).
   2) Repeatedly merge sublists to produce new sublists until 
      there is only 1 sublist remaining. This will be the sorted list.
+  Best application is for very large sets of data because it inherently
+  facilitates working with divisions of the original unsorted set.
   */
   void mergeSort(std::vector<int> &items);
 
-  /* Quick Sort: O(n log n)
+  /* Quick sort: O(n log n). Space: 1 array: O(n)
   Select a random item from n items to sort.
   Separate n-1 other items into two piles: 
   A left pile before rand in sorted order
   A right pile after rand in sorted order.
+  Its best application is for medium to large sets of data.
   */
-  void quickSort(std::vector<int> &item);
+  void quickSort(std::vector<int> &items);
+
+  /* Counting sort: O(3n + k). Space: 3 arrays: O(2n + k)
+  where k is the largest integer value in the set + 1
+  A stable, linear-time sorting algorithm that works 
+  with integers for which we know the largest value. 
+  Its primary use is in implementing radix sort.
+  */
+  void countingSort(std::vector<int> &items);
+
+  /* Radix sort: O (pn + pk ). Space: 3 arrays: O(2n + k)
+  A linear-time sorting algorithm that sorts elements digit by digit.
+  Suited to elements of a fixed size that can be conveniently 
+  broken into pieces, expressible as integers.
+  */
+  void radixSort(std::vector<int> &items);
 };
 
 #endif
