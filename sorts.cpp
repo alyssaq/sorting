@@ -1,8 +1,6 @@
 /**
     Sorting Algorithms in C++
-    Implementations for fun
-
-    @author Alyssa Quek 2013
+    @Author: Alyssa Quek 2013
 */
 #include <iostream>
 #include <iterator>
@@ -12,6 +10,7 @@
 #include <string>
 #include <assert.h>
 
+#include "sorts.h"
 using namespace std;
 typedef std::vector<int>::iterator vecIter;
 typedef std::vector<int>::const_iterator vecCiter;
@@ -31,88 +30,65 @@ string vector2string(const vector<int>& v) {
   return sstream.str();
 }
 
-//functor to increment an integer by 2 
-int incrementBy2(int i) { return i + 2; }
-
-/*
-  Insertion sort: O(n^2)
-  Start from the beginning and incrementally insert the 
-  remaining elements to keep the array sorted
-*/
-vector<int> insertionSort(const vector<int>& items) {
-  vector<int> sortedItems = items;
-  int temp;
-
+void Sorter::insertionSort(vector<int>& items) {
   for(int i = 1; i < items.size(); i++) {
-    for (int j = 0; j < i; j++){
-      if (sortedItems[i] < sortedItems[j]) {
-        temp = sortedItems[i];
-        sortedItems[i] = sortedItems[j];
-        sortedItems[j] = temp;
-      }
+    int temp = items[i], j = i - 1;
+    while (j >= 0 && (items[j] > temp)) {
+      items[j+1] = items[j];
+      j--;
     }
-    //print(sortedItems);
+    items[j+1] = temp;
   }
-
-  return sortedItems;
 }
 
-int findAndDeleteMinItem(std::vector<int> &items) {
-  int min = numeric_limits<int>::max();
-  vecIter min_iter = items.begin();
-  for (vecIter iter = items.begin(); iter != items.end(); iter++) {
-    if (*iter < min) {
-      min = *iter;
-      min_iter = iter;
+void insertionSort_alternate(vector<int>& items) {
+  int temp;
+  for(int i = 1; i < items.size(); i++) {
+    for (int j = 0; j < i; j++) {
+      if (items[i] < items[j]) {
+        swap(items[i], items[j]);
+        continue;
+      }
     }
   }
+}
+
+/* Used by selection sort */
+int findAndDeleteMinItem(vector<int> &items) {
+  vecIter min_iter = min_element(items.begin(), items.end());
+  int min = *min_iter;
   items.erase(min_iter);
 
   return min;
 }
 
-/*
-  Selection sort: O(n^2)
-  Keep finding the min item O(n)
-  push it into a sorted array and delete.
-  Heapsort: Use a prioirity queue and speed it to O(n log n)
-  Find and delete takes O(log n) instead of O(n)
-*/
-vector<int> selectionSort(const vector<int> &items) {
-  vector<int> tempItems = items;
+void Sorter::selectionSort(vector<int> &items) {
   vector<int> sortedItems;
-
-  for(vecCiter iter = items.begin(); iter != items.end(); iter++) {
-    sortedItems.push_back(findAndDeleteMinItem(tempItems));
+  for(int i = 0, size = items.size(); i < size; i++) {
+    sortedItems.push_back(findAndDeleteMinItem(items));
   }
-  return sortedItems;
+
+  items = sortedItems;
 }
 
-/*
-  Bubble sort: O(n^2)
-  Repeatedly traverse through the list, comparing each pair of 
-  adjacent items and swapping them if they are in the wrong order.
-*/
-vector<int> bubbleSort(const vector<int> &items) {
-  vector<int> sortedItems(items);
+void Sorter::bubbleSort(vector<int> &items) {
   vecIter iterA, iterB;
   bool hasSwapped = true;
 
   while (hasSwapped) {
     hasSwapped = false;
-    iterA = sortedItems.begin(), iterB = iterA + 1;
-    for(; iterB != sortedItems.end(); iterA++, iterB++) {
+    iterA = items.begin(), iterB = iterA + 1;
+    for(; iterB != items.end(); iterA++, iterB++) {
       if (*iterA > *iterB) {
         swap(*iterA, *iterB);
         hasSwapped = true;
       }
     }
   }
-  return sortedItems;
 }
 
 /*
-  Merge sort: O(n log n)
+  Used by Merge sort: O(n log n)
   Using a temp vector to avoid recreating temp arrays during the split
  */
 void mergeHelper(vector<int> &items, int start, int end, vector<int> &temp) {
@@ -125,7 +101,7 @@ void mergeHelper(vector<int> &items, int start, int end, vector<int> &temp) {
   int lidx = start, ridx = mid;
 
   mergeHelper(items, start, mid, temp); //mergeSort first half
-  mergeHelper(items, mid, end, temp);  //mergeSort second half
+  mergeHelper(items, mid, end, temp);   //mergeSort second half
 
   for (i = 0; i < len; i++) {
     /* Check if there are items in the left to compare.
@@ -144,17 +120,17 @@ void mergeHelper(vector<int> &items, int start, int end, vector<int> &temp) {
 }
 
 /*
-  As per mergeHelper above but using pointers
+  As per mergeHelper above but using C++ iterators
  */
-void mergeHelperPointers(vector<int> &items, vecIter start, vecIter end, vector<int> &temp) {
+void mergeHelperIterators(vector<int> &items, vecIter start, vecIter end, vector<int> &temp) {
   if (start + 1 == end) return; //base case: one item
 
   vecIter mid = start + (end - start) / 2;
   //pointer index to the start of the left and right subarrays
   vecIter liter = start, riter = mid;
 
-  mergeHelperPointers(items, start, mid, temp); //mergeSort first half
-  mergeHelperPointers(items, mid, end, temp);  //mergeSort second half
+  mergeHelperIterators(items, start, mid, temp); //mergeSort first half
+  mergeHelperIterators(items, mid, end, temp);   //mergeSort second half
 
   temp.clear();
   for (vecIter iter = start; iter != end; iter++) {
@@ -172,23 +148,18 @@ void mergeHelperPointers(vector<int> &items, vecIter start, vecIter end, vector<
   copy(temp.begin(), temp.end(), start);
 }
 
-/*
-  Merge sort: O(n log n)
-  1) Divide the unsorted list into n sublists, 
-   each containing 1 element (a list of 1 element is considered sorted).
-  2) Repeatedly merge sublists to produce new sublists until 
-   there is only 1 sublist remaining. This will be the sorted list.
-*/
-vector<int> mergeSort(const vector<int> &v) {
+void Sorter::mergeSort(vector<int> &items) {
   vector<int> temp;
-  vector<int> items(v);
+  // Uncomment 2 lines below of array implementation
   //temp.resize(items.size());
   //mergeHelper(items, 0, items.size(), temp);
+
+  // Mergesort using iterators
   temp.reserve(items.size());
-  mergeHelperPointers(items, items.begin(), items.end(), temp);
-  return items;
+  mergeHelperIterators(items, items.begin(), items.end(), temp);
 }
 
+// Used by Quicksort
 vecIter partition(vector<int> &items, vecIter start, vecIter rand) {
   vecIter divider = start; // divider iterator for the rand pivot element
 
@@ -202,12 +173,7 @@ vecIter partition(vector<int> &items, vecIter start, vecIter rand) {
 
   return divider;
 }
-/*
- Select a random item from n items to sort.
- Separate n-1 other items into two piles: 
- A left pile before rand in sorted order
- A right pile after rand in sorted order.
-*/
+
 void quickSortHelper(vector<int> &items, vecIter start, vecIter rand) {
   if (start > rand) return; //base case: nothing to partition
 
@@ -216,14 +182,8 @@ void quickSortHelper(vector<int> &items, vecIter start, vecIter rand) {
   quickSortHelper(items, pivot + 1, rand     );
 }
 
-/*
-Quick Sort: O(n log n)
-*/
-vector<int> quickSort(const vector<int> &v) {
-  vector<int> items(v);
+void Sorter::quickSort(vector<int> &items) {
   quickSortHelper(items, items.begin(), items.end() - 1);
-
-  return items;
 }
 
 int main() {
@@ -232,28 +192,26 @@ int main() {
   const string sortedStr = "-54, -7, -2, -1, 0, 3, 7, 16, 24, 56, 87, 277";
   print(items);
 
-  vector<int> sortedItems = insertionSort(items);
-  string s = vector2string(sortedItems);
-  assert(s == sortedStr);
+  Sorter sorter;
+  vector<int> sortedItems(items);
+  sorter.insertionSort(sortedItems);
+  assert(vector2string(sortedItems)  == sortedStr);
 
-  sortedItems = selectionSort(items);
-  s = vector2string(sortedItems);
-  assert(s == sortedStr);
+  sortedItems = items;
+  sorter.selectionSort(sortedItems);
+  assert(vector2string(sortedItems)  == sortedStr);
 
-  sortedItems = bubbleSort(items);
-  s = vector2string(sortedItems);
-  assert(s == sortedStr);
+  sortedItems = items;
+  sorter.bubbleSort(sortedItems);
+  assert(vector2string(sortedItems) == sortedStr);
 
-  sortedItems = mergeSort(items);
+  sortedItems = items;
+  sorter.mergeSort(sortedItems);
+  assert(vector2string(sortedItems)  == sortedStr);
+
+  sortedItems = items;
+  sorter.quickSort(sortedItems);
+  assert(vector2string(sortedItems)  == sortedStr);
+
   print(sortedItems);
-  s = vector2string(sortedItems);
-  assert(s == sortedStr);
-
-  sortedItems = quickSort(items);
-  s = vector2string(sortedItems);
-  assert(s == sortedStr);
-
-  transform(sortedItems.begin(), sortedItems.end(), sortedItems.begin(), incrementBy2);
-  print(sortedItems);
-
 }
