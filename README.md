@@ -12,6 +12,7 @@ To run:
 - Bubble sort: O(n<sup>2</sup>)
 - Merge sort: O(n log n)
 - Quick sort: O(n log n)
+- [Heap sort](https://github.com/alyssaq/heap): O(n log n)  
 - Counting sort: O(3n + k)
 - Radix sort: O (pn + pk )
 

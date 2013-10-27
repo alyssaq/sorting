@@ -14,6 +14,8 @@
 using namespace std;
 typedef std::vector<int>::iterator vecIter;
 
+static int COUNTER = 1;
+
 // print a vector
 void printVector(const vector<int>& v) {
   copy(v.begin(), v.end() - 1, ostream_iterator<int>(cout, ", "));
@@ -27,6 +29,11 @@ string vector2string(const vector<int>& v) {
   sstream << *(v.end() - 1);
   
   return sstream.str();
+}
+
+void assertAndPrint(const vector<int>& v, const string &s, string sortType) {
+  string result = (vector2string(v) == s) ? "PASSED" : "FAILED";
+  cout << COUNTER++ << ") " << sortType << " " << result << ": " << s << "\n";
 }
 
 void Sorter::insertionSort(vector<int>& items) {
@@ -149,7 +156,7 @@ void mergeHelperIterators(vector<int> &items, vecIter start, vecIter end, vector
 
 void Sorter::mergeSort(vector<int> &items) {
   vector<int> temp;
-  // Uncomment 2 lines below of array implementation
+  // Uncomment 2 lines below for array implementation
   //temp.resize(items.size());
   //mergeHelper(items, 0, items.size(), temp);
 
@@ -199,7 +206,6 @@ void Sorter::countingSort(vector<int> &items) {
   for (iter = counts.begin() + 1; iter != counts.end(); iter++) {
     *iter += *(iter - 1);
   }
-
   //Each iter, decrement counts & insert into sorted using counts val: O(n)
   for (iter = items.begin() + 1; iter != items.end(); iter++) {
     sorted[--counts[*iter]] = *iter;
@@ -219,37 +225,32 @@ int main() {
   int myints2[] = {0,4,1,3,6,1,2,4,3,1};
   vector<int> items2 (myints2, myints2 + sizeof(myints2) / sizeof(int));
   const string sortedStr2 = "0, 1, 1, 1, 2, 3, 3, 4, 4, 6";
-  printVector(items);
+  cout << "Input: " << vector2string(items) << endl;
+  cout << "Input: " << vector2string(items2) << endl;
 
   Sorter sorter;
   vector<int> sortedItems(items);
   sorter.insertionSort(sortedItems);
-  assert(vector2string(sortedItems)  == sortedStr);
+  assertAndPrint(sortedItems, sortedStr, "insertionSort");
 
   sortedItems = items;
   sorter.selectionSort(sortedItems);
-  assert(vector2string(sortedItems)  == sortedStr);
+  assertAndPrint(sortedItems, sortedStr, "selectionSort");
 
   sortedItems = items;
   sorter.bubbleSort(sortedItems);
-  assert(vector2string(sortedItems) == sortedStr);
+  assertAndPrint(sortedItems, sortedStr, "bubbleSort");
 
   sortedItems = items;
   sorter.mergeSort(sortedItems);
-  assert(vector2string(sortedItems)  == sortedStr);
+  assertAndPrint(sortedItems, sortedStr, "mergeSort");
 
   sortedItems = items;
   sorter.quickSort(sortedItems);
-  assert(vector2string(sortedItems)  == sortedStr);
-
-  printVector(sortedItems);
-
-  printVector(items2);
+  assertAndPrint(sortedItems, sortedStr, "quickSort");
 
   sortedItems = items2;
   sorter.countingSort(sortedItems);
-  assert(vector2string(sortedItems)  == sortedStr2);
+  assertAndPrint(sortedItems, sortedStr2, "countingSort");
 
-  printVector(sortedItems);
-  
 }
