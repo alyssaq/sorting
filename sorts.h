@@ -8,7 +8,7 @@
 
 #ifndef SORTS_H
 #define SORTS_H
-
+ 
 #include <vector>
 
 class Sorter {
@@ -61,9 +61,10 @@ class Sorter {
   with integers for which we know the largest value. 
   Its primary use is in implementing radix sort.
   */
-  void countingSort(std::vector<int> &items);
+  void countingSort(std::vector<int> &items, int exp, int k);
 
   /* Radix sort: O (pn + pk). Space: 3 arrays: O(2n + k)
+  where p = num digit positions and k = the radix
   A linear-time sorting algorithm that sorts elements digit by digit.
   Suited to elements of a fixed size that can be conveniently 
   broken into pieces, expressible as integers.

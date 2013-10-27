@@ -9,6 +9,7 @@
 #include <sstream> //stringstream
 #include <string>
 #include <assert.h>
+#include <math.h>       /* pow */
 
 #include "sorts.h"
 using namespace std;
@@ -33,7 +34,7 @@ string vector2string(const vector<int>& v) {
 
 void assertAndPrint(const vector<int>& v, const string &s, string sortType) {
   string result = (vector2string(v) == s) ? "PASSED" : "FAILED";
-  cout << COUNTER++ << ") " << sortType << " " << result << ": " << s << "\n";
+  cout << COUNTER++ << ") " << sortType << " " << result << ": " << vector2string(v) << "\n";
 }
 
 void Sorter::insertionSort(vector<int>& items) {
@@ -192,15 +193,15 @@ void Sorter::quickSort(vector<int> &items) {
   quickSortHelper(items, items.begin(), items.end() - 1);
 }
 
-void Sorter::countingSort(vector<int> &items) {
+void Sorter::countingSort(vector<int> &items, int exp = 1, int k = 100) {
   vector<int> sorted, counts; //size = largest value in items + 1
-  counts.resize(*max_element(items.begin(), items.end()) + 1); //O(n)
+  counts.resize(k); //O(n)
   sorted.resize(items.size());
 
   //count occurrence of each integer in items: O(n)
   vecIter iter = items.begin();
   for (; iter != items.end(); iter++) {
-    ++counts[*iter];
+    ++counts[(*iter/exp) % k];
   }
   //perform cumulative sum: O(k)
   for (iter = counts.begin() + 1; iter != counts.end(); iter++) {
@@ -208,23 +209,33 @@ void Sorter::countingSort(vector<int> &items) {
   }
   //Each iter, decrement counts & insert into sorted using counts val: O(n)
   for (iter = items.begin() + 1; iter != items.end(); iter++) {
-    sorted[--counts[*iter]] = *iter;
+    sorted[--counts[(*iter/exp) % k]] = *iter;
   }
 
   items = sorted;
 }
 
-void Sorter::radixSort(std::vector<int> &items){
+void Sorter::radixSort(std::vector<int> &items) {
+  vector<int> sorted, buckets; //size = radix
+  int maxElem = *max_element(items.begin(), items.end());
+  int pval = pow(100, items.size());
 
+  for (int exp = 1; maxElem/exp > 0; exp *=10)
+    countingSort(items, exp, 100);
+
+  printVector(items);
 }
 
 int main() {
   int myints[] = {16,277,3,-2,24,-54,-1,0,56,87,7,-7};
   vector<int> items (myints, myints + sizeof(myints) / sizeof(int));
   const string sortedStr = "-54, -7, -2, -1, 0, 3, 7, 16, 24, 56, 87, 277";
-  int myints2[] = {0,4,1,3,6,1,2,4,3,1};
+  int myints2[] = {0,4,1,3,6,2,8,4,3,1};
   vector<int> items2 (myints2, myints2 + sizeof(myints2) / sizeof(int));
-  const string sortedStr2 = "0, 1, 1, 1, 2, 3, 3, 4, 4, 6";
+  const string sortedStr2 = "0, 1, 1, 2, 3, 3, 4, 4, 6, 8";
+  int myints3[] = {0,4,111,3,6,2,85,44,3,991,1};
+  vector<int> items3 (myints3, myints3 + sizeof(myints3) / sizeof(int));
+  const string sortedStr3 = "0, 1, 2, 3, 3, 4, 6, 44, 85, 111, 991";
   cout << "Input: " << vector2string(items) << endl;
   cout << "Input: " << vector2string(items2) << endl;
 
@@ -252,5 +263,9 @@ int main() {
   sortedItems = items2;
   sorter.countingSort(sortedItems);
   assertAndPrint(sortedItems, sortedStr2, "countingSort");
+
+  sortedItems = items3;
+  sorter.radixSort(sortedItems);
+  assertAndPrint(sortedItems, sortedStr3, "radixSort");
 
 }
