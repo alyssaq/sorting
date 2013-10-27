@@ -9,13 +9,7 @@
 #ifndef SORTS_H
 #define SORTS_H
 
-#include <iostream>
-#include <iterator>
-#include <algorithm>
 #include <vector>
-#include <sstream> //stringstream
-#include <string>
-#include <assert.h>
 
 class Sorter {
  public:
@@ -24,7 +18,7 @@ class Sorter {
   find the location the current element belongs within the sorted array.
   The elements to the left are kept sorted.
   */
-  void insertionSort(std::vector<int>& items);
+  void insertionSort(std::vector<int> &items);
 
   /* Selection sort: O(n^2)
   Keep finding the min item O(n)
