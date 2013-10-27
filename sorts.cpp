@@ -186,8 +186,27 @@ void Sorter::quickSort(vector<int> &items) {
   quickSortHelper(items, items.begin(), items.end() - 1);
 }
 
-void Sorter::countingSort(vector<int> &item) {
+void Sorter::countingSort(vector<int> &items) {
+  vector<int> sorted, counts; //size = largest value in items + 1
+  counts.resize(*max_element(items.begin(), items.end()) + 1); //O(n)
+  sorted.resize(items.size());
 
+  //count occurrence of each integer in items: O(n)
+  vecIter iter = items.begin();
+  for (; iter != items.end(); iter++) {
+    ++counts[*iter];
+  }
+  //perform cumulative sum: O(k)
+  for (iter = counts.begin() + 1; iter != counts.end(); iter++) {
+    *iter += *(iter - 1);
+  }
+
+  //Each iter, decrement counts & insert into sorted using counts val: O(n)
+  for (iter = items.begin() + 1; iter != items.end(); iter++) {
+    sorted[--counts[*iter]] = *iter;
+  }
+
+  items = sorted;
 }
 
 void Sorter::radixSort(std::vector<int> &items){
@@ -198,6 +217,9 @@ int main() {
   int myints[] = {16,277,3,-2,24,-54,-1,0,56,87,7,-7};
   vector<int> items (myints, myints + sizeof(myints) / sizeof(int));
   const string sortedStr = "-54, -7, -2, -1, 0, 3, 7, 16, 24, 56, 87, 277";
+  int myints2[] = {0,4,1,3,6,1,2,4,3,1};
+  vector<int> items2 (myints2, myints2 + sizeof(myints2) / sizeof(int));
+  const string sortedStr2 = "0, 1, 1, 1, 2, 3, 3, 4, 4, 6";
   print(items);
 
   Sorter sorter;
@@ -221,9 +243,14 @@ int main() {
   sorter.quickSort(sortedItems);
   assert(vector2string(sortedItems)  == sortedStr);
 
-  sortedItems = items;
+  print(sortedItems);
+
+  print(items2);
+
+  sortedItems = items2;
   sorter.countingSort(sortedItems);
-  //assert(vector2string(sortedItems)  == sortedStr);
+  assert(vector2string(sortedItems)  == sortedStr2);
 
   print(sortedItems);
+  
 }

@@ -69,7 +69,7 @@ class Sorter {
   */
   void countingSort(std::vector<int> &items);
 
-  /* Radix sort: O (pn + pk ). Space: 3 arrays: O(2n + k)
+  /* Radix sort: O (pn + pk). Space: 3 arrays: O(2n + k)
   A linear-time sorting algorithm that sorts elements digit by digit.
   Suited to elements of a fixed size that can be conveniently 
   broken into pieces, expressible as integers.
