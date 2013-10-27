@@ -13,10 +13,9 @@
 #include "sorts.h"
 using namespace std;
 typedef std::vector<int>::iterator vecIter;
-typedef std::vector<int>::const_iterator vecCiter;
 
 // print a vector
-void print(const vector<int>& v) {
+void printVector(const vector<int>& v) {
   copy(v.begin(), v.end() - 1, ostream_iterator<int>(cout, ", "));
   cout << *(v.end() - 1) << endl;
 }
@@ -220,7 +219,7 @@ int main() {
   int myints2[] = {0,4,1,3,6,1,2,4,3,1};
   vector<int> items2 (myints2, myints2 + sizeof(myints2) / sizeof(int));
   const string sortedStr2 = "0, 1, 1, 1, 2, 3, 3, 4, 4, 6";
-  print(items);
+  printVector(items);
 
   Sorter sorter;
   vector<int> sortedItems(items);
@@ -243,14 +242,14 @@ int main() {
   sorter.quickSort(sortedItems);
   assert(vector2string(sortedItems)  == sortedStr);
 
-  print(sortedItems);
+  printVector(sortedItems);
 
-  print(items2);
+  printVector(items2);
 
   sortedItems = items2;
   sorter.countingSort(sortedItems);
   assert(vector2string(sortedItems)  == sortedStr2);
 
-  print(sortedItems);
+  printVector(sortedItems);
   
 }
