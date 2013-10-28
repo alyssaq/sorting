@@ -9,7 +9,6 @@
 #include <sstream> //stringstream
 #include <string>
 #include <assert.h>
-#include <math.h>       /* pow */
 
 #include "sorts.h"
 using namespace std;
