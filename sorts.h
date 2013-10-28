@@ -60,8 +60,10 @@ class Sorter {
   A stable, linear-time sorting algorithm that works 
   with integers for which we know the largest value. 
   Its primary use is in implementing radix sort.
+   Works best with smaller, dense integers. Ie. [0-9+]
+   For larger integers (999+), use radix sort
   */
-  void countingSort(std::vector<int> &items, int exp, int k);
+  void countingSort(std::vector<int> &items, int exp, bool isRadixSort);
 
   /* Radix sort: O (pn + pk). Space: 3 arrays: O(2n + k)
   where p = num digit positions and k = the radix
