@@ -14,7 +14,7 @@ To run:
 - Quick sort: O(n log n)
 - [Heap sort](https://github.com/alyssaq/heap): O(n log n)  
 - Counting sort: O(3n + k)
-- Radix sort: O (pn + pk )
+- Radix sort: O (pn + pk)
 
 ## Common Sort Advantages and Disadvantages
 __Merge sort__:  
