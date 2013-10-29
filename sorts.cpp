@@ -197,8 +197,8 @@ void Sorter::countingSort(vector<int> &items, int base = 1, bool isRadixSort = f
   const unsigned int MOD = 10;
   const unsigned int COUNTSSIZE = isRadixSort ? 
                      *max_element(items.begin(), items.end()) + 1 : MOD;
-  vector<int> sorted, counts; //size = largest value in items + 1
-  counts.resize(COUNTSSIZE);  //O(n)
+  vector<int> sorted, counts;    //size = largest value in items + 1
+  counts.resize(COUNTSSIZE, 0);  //O(n)
   sorted.resize(items.size());
 
   //count occurrence of each integer in items: O(n)
