@@ -1,12 +1,14 @@
 # Sorting Algorithms in C++
 
 To compile:  
-> g++ sorts.cpp 
+
+    > g++ sorts.cpp 
 
 To run:
-> ./a.out  
 
-##Implemented Sorting Algorithms
+    > ./a.out  
+
+## Implemented Sorting Algorithms
 - Insertion sort: O(n<sup>2</sup>)
 - Selection sort: O(n<sup>2</sup>)
 - Bubble sort: O(n<sup>2</sup>)
